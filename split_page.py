@@ -6,6 +6,7 @@ from misc import img_print, write_img, load_binary_img
 
 def removing_upper_lower(img):
     """
+    because IAM database has 2 upper and 1 lower lines that need to be removed
     :param img: binary image
     :return: image without unnecessary frames
     """
@@ -32,6 +33,7 @@ def removing_upper_lower(img):
 
 def split_lines(img):
     """
+    splits a page into text lines
     :param img: binary image
     :return: returns a vector of text line images
     """

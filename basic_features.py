@@ -51,9 +51,65 @@ def basic_ftrs_one(zaline):
     return np.array([f1, f2, f3, f4, f5 , f6])
 
 
+# from basic features
+def most_row_BW_WB(line):
+    """
+    calculates the index of row that has highest black-white and white-black transitions
+    :param line: image of the text line
+    :return: row number
+    """
+    diff_img = np.diff(line.astype(int))
+    row_number = -1
+    mx_cnt = 0
+    i = 0
+
+    for diff_row in diff_img:
+        unique, counts = np.unique(diff_row, return_counts=True)
+        counts = dict(zip(unique, counts))
+        num_255 = 0
+        num_neg_255 = 0
+        if 255 in counts:
+            num_255 = counts[255]
+        if -255 in counts:
+            num_neg_255 = counts[-255]
+        if mx_cnt < num_255 + num_neg_255:
+            mx_cnt = num_255 + num_neg_255
+            row_number = i
+        i += 1
+    return row_number
+
+
+# from basic features
+def count_white_portion(row):
+    """
+    calculates the white portions' size and returns the median one
+    :param row: row of the text line (the one that has highest number of transitions (B-W & W-B)
+    :return: the median size of white portions od given row
+    """
+    first_black = False
+    last_black = False
+    idx = 0
+    d = []
+    while idx < len(row):
+        if row[idx] < 255:
+            first_black = True
+            last_black = True
+        cnt = 0
+        while first_black and idx < len(row) and row[idx] == 255:
+            cnt += 1  # counting the width of continuous white pixels
+            last_black = False
+            idx += 1
+        if cnt == 0:
+            idx += 1
+        else:
+            d.append(cnt)
+    if last_black:
+        d.pop()
+    return np.median(d)
 
 
 
+# feature = count_white_portion(line[most_row_BW_WB(line)])
 
 
 

@@ -6,6 +6,11 @@ from component import *
 
 
 def get_words_lens_avg_dist(components):
+    """
+    classify components into words, get average width of components and components' width
+    :param components: list of Component
+    :return: generated words, average width of component and list of components' width
+    """
     i = 1
     dist = 0
     left_most = components[0].left_most
@@ -81,51 +86,6 @@ def avg_black_to_white(components, line):
         cnt += 1
     return avg_b_w / cnt
 
-# from basic features
-def most_row_BW_WB(line):
-    diff_img = np.diff(line.astype(int))
-    row_number = -1
-    mx_cnt = 0
-    i = 0
-
-    for diff_row in diff_img:
-        unique, counts = np.unique(diff_row, return_counts=True)
-        counts = dict(zip(unique, counts))
-        num_255 = 0
-        num_neg_255 = 0
-        if 255 in counts:
-            num_255 = counts[255]
-        if -255 in counts:
-            num_neg_255 = counts[-255]
-        if mx_cnt < num_255 + num_neg_255:
-            mx_cnt = num_255 + num_neg_255
-            row_number = i
-        i += 1
-    return row_number
-
-# from basic features
-def count_white_portion(row):
-    first_black = False
-    last_black = False
-    idx = 0
-    d = []
-    while idx < len(row):
-        if row[idx] < 255:
-            first_black = True
-            last_black = True
-        cnt = 0
-        while first_black and idx < len(row) and row[idx] == 255:
-            cnt += 1  # counting the width of continuous white pixels
-            last_black = False
-            idx += 1
-        if cnt == 0:
-            idx += 1
-        else:
-            d.append(cnt)
-    if last_black:
-        d.pop()
-    return np.median(d)
-
 
 def line_features(components, line):
     components.sort(key=lambda x: x.left_most)
@@ -151,7 +111,6 @@ def line_features(components, line):
     features.append(np.std(comp_lens))
 
     features.append(avg_black_to_white(components, line))
-    features.append(count_white_portion(line[most_row_BW_WB(line)]))
     return features
 
 
@@ -165,8 +124,6 @@ if __name__ == "__main__":
     lines = split_lines(img)
     page_features = []
     for line in lines:
-        most_row_BW_WB(line)
-
         nlabels, labels, stats, centroids = cv2.connectedComponentsWithStats(255 - line, connectivity=8,
                                                                              ltype=cv2.CV_32S)
         stats = stats[1:]
