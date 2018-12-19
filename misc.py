@@ -15,7 +15,7 @@ def make_dirs(directory):
 
 def load_binary_img(file_path):
     img = imread(file_path, 0)
-    _, img = threshold(img, 180, 255, THRESH_BINARY)
+    _, img = threshold(img, 200, 255, THRESH_BINARY)
     return img
 
 

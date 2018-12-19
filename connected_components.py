@@ -58,7 +58,7 @@ def avg_word_dist_and_width(words):
     return avg_width / len(words), avg_dist / (len(words) - 1)
 
 
-def print_words(words):
+def print_words(words, line):
     print(words)
     print("============================================")
     for comp in words:
@@ -112,27 +112,3 @@ def line_features(components, line):
 
     features.append(avg_black_to_white(components, line))
     return features
-
-
-if __name__ == "__main__":
-    directory = "formsA-D/"
-    file_name = "a02-053.png"
-    # for file_name in listdir(directory):
-    img = load_binary_img(directory + file_name)
-    img = removing_upper_lower(img)
-
-    lines = split_lines(img)
-    page_features = []
-    for line in lines:
-        nlabels, labels, stats, centroids = cv2.connectedComponentsWithStats(255 - line, connectivity=8,
-                                                                             ltype=cv2.CV_32S)
-        stats = stats[1:]
-        components = []
-        for label_stats in stats:
-            if label_stats[2] > 2:
-                components.append(Component(left_most=label_stats[0], top_most=label_stats[1],
-                                            box_width=label_stats[2], box_height=label_stats[3],
-                                            co_area=label_stats[4]))
-        page_features.append(line_features(components, line))
-
-    print(page_features)

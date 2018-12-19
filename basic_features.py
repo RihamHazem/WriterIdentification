@@ -35,7 +35,7 @@ def getboundaries(zaline):
     return tl, ul, lb, bl
 
 
-def basic_ftrs_one(zaline):
+def basic_ftrs(zaline):
     # convert to binary image
     line_bw = cv2.threshold(zaline, 0, 1, cv2.THRESH_BINARY)[1]
 
@@ -47,8 +47,9 @@ def basic_ftrs_one(zaline):
     f4 = f1/f2
     f5 = f1/f3
     f6 = f2/f3
-
-    return np.array([f1, f2, f3, f4, f5 , f6])
+    f7 = count_white_portion( most_row_BW_WB(zaline) )
+    f8 = f7/f2
+    return [f1, f2, f3, f4, f5 , f6, f7, f8]
 
 
 # from basic features
@@ -56,7 +57,7 @@ def most_row_BW_WB(line):
     """
     calculates the index of row that has highest black-white and white-black transitions
     :param line: image of the text line
-    :return: row number
+    :return: most row black to white and white to black
     """
     diff_img = np.diff(line.astype(int))
     row_number = -1
@@ -76,7 +77,7 @@ def most_row_BW_WB(line):
             mx_cnt = num_255 + num_neg_255
             row_number = i
         i += 1
-    return row_number
+    return line[ row_number ]
 
 
 # from basic features
@@ -106,17 +107,4 @@ def count_white_portion(row):
     if last_black:
         d.pop()
     return np.median(d)
-
-
-
-# feature = count_white_portion(line[most_row_BW_WB(line)])
-
-
-
-
-
-
-
-
-
 
