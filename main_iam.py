@@ -2,6 +2,7 @@ from connected_components import *
 from fractal import *
 from basic_features import *
 from sklearn import neighbors
+from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 
 
@@ -52,10 +53,15 @@ if __name__ == "__main__":
     #########################################
     # print(X)
     # print(y)
-    clf = neighbors.KNeighborsClassifier(n_neighbors, weights=weights)
-    clf.fit(X_train, y_train)
-    clf.predict(X_test)
-    print(clf.score(X_test, y_test))
+    # clf = neighbors.KNeighborsClassifier(n_neighbors, weights=weights)
+    # clf.fit(X_train, y_train)
+    # clf.predict(X_test)
+    # print(clf.score(X_test, y_test))
+
+    MultilayerPerceptron = MLPClassifier(alpha=0.0001, activation='identity', solver='adam', hidden_layer_sizes=(26,), max_iter=500, random_state=0)
+    MultilayerPerceptron.fit(X_train, y_train)
+    MultilayerPerceptron.predict(X_test)
+    print(MultilayerPerceptron.score(X_test, y_test))
 
 
 
