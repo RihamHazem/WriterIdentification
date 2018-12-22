@@ -34,5 +34,6 @@ def enclosed_regions(line):
             f+=4*area*math.pi/(l*l)
             r+=(l*l)/area
             size+=area
+    num = max(num, 1)
     return [f/num, r/num, size/num]
 

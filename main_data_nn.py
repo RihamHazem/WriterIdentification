@@ -26,16 +26,7 @@ if __name__ == "__main__":
             # img_print(img)
             lines = split_lines(img)
             for line in lines:
-                nlabels, labels, stats, centroids = cv2.connectedComponentsWithStats(255 - line, connectivity=8,
-                                                                                     ltype=cv2.CV_32S)
-                stats = stats[1:]
-                components = []
-                for label_stats in stats:
-                    if label_stats[2] > 2:
-                        components.append(Component(left_most=label_stats[0], top_most=label_stats[1],
-                                                    box_width=label_stats[2], box_height=label_stats[3],
-                                                    co_area=label_stats[4]))
-                page_features.append(line_features(components, line) + basic_ftrs(line) + getfractalftrs(line) + enclosed_regions(line))
+                page_features.append(line_features(line) + basic_ftrs(line) + getfractalftrs(line) + enclosed_regions(line))
                 page_labels.append(writer_id)
 
     page_features = np.array(page_features)
@@ -70,16 +61,7 @@ if __name__ == "__main__":
     # # img_print(img)
     # lines = split_lines(img)
     # for line in lines:
-    #     nlabels, labels, stats, centroids = cv2.connectedComponentsWithStats(255 - line, connectivity=8,
-    #                                                                          ltype=cv2.CV_32S)
-    #     stats = stats[1:]
-    #     components = []
-    #     for label_stats in stats:
-    #         if label_stats[2] > 2:
-    #             components.append(Component(left_most=label_stats[0], top_most=label_stats[1],
-    #                                         box_width=label_stats[2], box_height=label_stats[3],
-    #                                         co_area=label_stats[4]))
-    #     page_feature.append(line_features(components, line) + basic_ftrs(line) + getfractalftrs(line))
+    #     page_feature.append(line_features(line) + basic_ftrs(line) + getfractalftrs(line))
     #
     # print(MultilayerPerceptron.predict(page_feature))
 
