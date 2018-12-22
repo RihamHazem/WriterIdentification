@@ -3,6 +3,97 @@ import os
 from misc import write_img, img_print
 from split_page import *
 from component import *
+import math
+import numpy as np
+import operator
+
+
+def slope_of_component(word, line):
+    st_x = word.left_most
+    st_y = word.get_bottom_most()
+    end_x = word.get_right_most()
+    end_y = word.top_most
+    angles = []
+    # print(word)
+    # f = open("out.txt", "w+")
+    # for cur_y in range(end_y, st_y):
+    #    for x in range(st_x, end_x):
+    #        if line[cur_y][x] == 0:
+    #            f.write("0")
+    #        else:
+    #            f.write(" ")
+    #    f.write("\n")
+    # f.close()
+    X = []
+    Y = []
+    for x in range(st_x, end_x):
+        for cur_y in range(st_y - 1, end_y - 1, -1):
+            if line[cur_y][x] == 0:
+                X.append(x - st_x)
+                Y.append(- st_y + 1 + cur_y)
+
+    X = np.array(X)
+    Y = np.array(Y)
+    mx = 0
+    mx_angle = 90
+    for angle in range(135, 45, -10):
+        freq = dict()
+        # for x in range(st_x, end_x):
+        #    for cur_y in range(st_y-1, end_y-1, -1):
+
+        # val = round((y / math.tan(angle)) + (x-st_x))
+        val = np.divide(Y, math.tan(angle))
+        val = np.round(val + X)
+        for v in val:
+            #        print("angle ", angle)
+            #        print("value  ", val)
+            if v not in freq:
+                freq[v] = 1
+            else:
+                freq[v] += 1
+        #   else:
+        #      f.write(" ")P
+        #     f.write("\n")
+
+        sum = 0
+        cnt = 0
+        sorted_freq = sorted(freq.items(), key=operator.itemgetter(1))
+        # print(sorted_freq)
+        for i in range(len(sorted_freq) - 1, -1, -1):
+            sum += sorted_freq[i][1]
+            cnt += 1
+            if cnt == 5:
+                break
+        if cnt < 5:
+            continue
+        if sum / 5 > mx:
+            mx = sum / 5
+            mx_angle = angle
+    # print("angles ",angles)
+    # print("end")
+    return mx_angle
+
+
+def slant_feature(words, line):
+    # histo = dict()
+    # f = open("out.txt", "w+")
+    ''''
+    for liness in line:
+        print(len(liness))
+        for num in liness:
+            if (num!=255):
+                f.write(str(num))
+            else:
+                f.write(" ")
+        f.write("\n")
+    f.close()
+    '''
+    angles = []
+    for word in words:
+        angle = slope_of_component(word, line)
+        angles.append(angle)
+
+    return [np.mean(angles), np.std(angles)]
 
 
 def get_words_lens_avg_dist(components):
@@ -100,7 +191,7 @@ def line_features(components, line):
     """
     features = []
     feature1, words, comp_lens = get_words_lens_avg_dist(components)
-
+    histo_feature = slant_feature(words, line)
     feature2, feature3 = avg_word_dist_and_width(words)
 
     features.append(feature1)
@@ -109,6 +200,8 @@ def line_features(components, line):
     features.append(np.mean(comp_lens))
     features.append(np.median(comp_lens))
     features.append(np.std(comp_lens))
+    features.append(histo_feature[0])
+    features.append(histo_feature[1])
 
     features.append(avg_black_to_white(components, line))
     return features
