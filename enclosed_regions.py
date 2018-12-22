@@ -1,6 +1,7 @@
 import cv2
 import math
 import numpy as np
+
 def enclosed_regions(line):
     ret, labels = cv2.connectedComponents(line)
    # l=0
@@ -33,5 +34,5 @@ def enclosed_regions(line):
             f+=4*area*math.pi/(l*l)
             r+=(l*l)/area
             size+=area
-    return f/num,r/num,size/num
+    return [f/num, r/num, size/num]
 

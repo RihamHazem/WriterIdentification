@@ -44,17 +44,17 @@ def split_lines(img):
     # this array contains summation of all *black* pixels on each row of the image
     row_hist = np.sum(img < 255, axis=1)
     # threshold for rows contains black pixel less than 25 (keeps only ones with higher black pixels that 25)
-    is_lines = row_hist > 100
+    is_lines = row_hist > 20
     lines = []
     i = 0
     while i < len(is_lines):
         if is_lines[i]:
             begin_row = i
-            lower_bound = max(begin_row - 50, 0)
+            lower_bound = max(begin_row - 20, 0)
             while i < len(is_lines) and is_lines[i]:
                 i += 1
-            upper_bound = min(i + 50, len(is_lines) - 1)
-            if i - begin_row > 20:  # threshold for # of rows to be higher than 20 row
+            upper_bound = min(i + 20, len(is_lines) - 1)
+            if i - begin_row > 10:  # threshold for # of rows to be higher than 20 row
                 lines.append(img[lower_bound:upper_bound, :])
         i += 1
     return lines

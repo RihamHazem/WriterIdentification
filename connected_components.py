@@ -55,7 +55,7 @@ def avg_word_dist_and_width(words):
         avg_width += words[i].box_width
         avg_dist += words[i].left_most - words[i - 1].get_right_most()
         i += 1
-    return avg_width / len(words), avg_dist / (len(words) - 1)
+    return avg_width / max(1, len(words)), avg_dist / max(1, len(words) - 1)
 
 
 def print_words(words, line):

@@ -58,7 +58,7 @@ if __name__ == "__main__":
     # clf.predict(X_test)
     # print(clf.score(X_test, y_test))
 
-    MultilayerPerceptron = MLPClassifier(alpha=0.0001, activation='identity', solver='adam', hidden_layer_sizes=(26,), max_iter=500, random_state=0)
+    MultilayerPerceptron = MLPClassifier(alpha=0.001, activation='logistic', solver='adam', hidden_layer_sizes=(19,), max_iter=500, random_state=0)
     MultilayerPerceptron.fit(X_train, y_train)
     MultilayerPerceptron.predict(X_test)
     print(MultilayerPerceptron.score(X_test, y_test))
