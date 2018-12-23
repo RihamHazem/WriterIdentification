@@ -54,7 +54,7 @@ def pltgraph(lins):
     plt.show()
 
 
-def fitline(x, y, pts):
+def fitline(x, y, pts,min_err):
     lins = []
     slp = []
     err = 0
@@ -71,8 +71,9 @@ def fitline(x, y, pts):
         err = err + 1/len(x)*(sum(
             [(slope * xx + intercept - yy)**2 for xx, yy in zip(x[pts[i]:pts[i + 1]], y[pts[i]:pts[i + 1]])]))
         slp.append(slope)
+        if min_err<err:
+            break
     return lins, err, slp
-
 
 def getslope(x, y):
     # sorting according to X
@@ -95,13 +96,14 @@ def getslope(x, y):
      for p2 in range(p1+tholth, len(x)-rng):
             pts[1] = p1
             pts[2] = p2
-            lines, lines_err, slopes = fitline(x, y, pts)
+            lines, lines_err, slopes = fitline(x, y, pts,err)
             if lines_err < err:
                 l_slope = slopes
                 zal = lines
                 err=lines_err
     #pltgraph(zal)
     return l_slope
+
 
 
 
