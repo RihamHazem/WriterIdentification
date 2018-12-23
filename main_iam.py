@@ -1,7 +1,7 @@
 from connected_components import *
 from fractal import *
 from basic_features import *
-from sklearn import neighbors
+from enclosed_regions import enclosed_regions
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 
@@ -12,7 +12,7 @@ if __name__ == "__main__":
     n_neighbors = 3
     weights = 'uniform' # or distance
 
-    writers = ["037", "025", "026"]
+    writers = ["210", "211", "215"]
     page_features = []
     page_labels = []
     cnt = 0
@@ -37,7 +37,7 @@ if __name__ == "__main__":
                     components.append(Component(left_most=label_stats[0], top_most=label_stats[1],
                                                 box_width=label_stats[2], box_height=label_stats[3],
                                                 co_area=label_stats[4]))
-            page_features.append(line_features(components, line) + basic_ftrs(line) + getfractalftrs(line))
+            page_features.append(line_features(line) + basic_ftrs(line) + getfractalftrs(line) + enclosed_regions(line))
             # cnt = len(page_features)
             # print(cnt)
             page_labels.append(writer_id)
