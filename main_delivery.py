@@ -95,13 +95,13 @@ if __name__ == "__main__":
         count_1 = 0
         count_2 = 0
         count_3 = 0
-        for l in lst:
-            if l == '1':
+        for l_ in lst:
+            if l_ == '1':
                 count_1 += 1
-            elif l == '2':
+            elif l_ == '2':
                 count_2 += 1
-        else:
-            count_3 += 1
+            else:
+                count_3 += 1
         if count_1 >= count_2 and count_1 >= count_3:
             # output 1 to the resulting file
             result_file.write('1\n')
