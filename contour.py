@@ -37,7 +37,7 @@ def local_maxima(x, y):
             x_right_points.append(x[j])
             y_right_points.append(y[j])
             if y[j] > y[i]:
-                fnd=True
+                fnd = True
                 break
         if not fnd:
             cnt += 1
@@ -84,7 +84,7 @@ def local_minima(x, y):
     return cnt / len(y), av_slope(slopes)
 
 
-def upper_contour_features(text_lines):
+def upper_contour_features(text_line):
     y = []
     x = []
     ref = 0
@@ -97,41 +97,42 @@ def upper_contour_features(text_lines):
     max_slope_list = []
     min_freq_list = []
     min_slope_list = []
-    for mat in text_lines:
-        for j in range(0, mat.shape[1]):
-            for i in range(0, mat.shape[0]):
-                if mat[i][j] == 0:
-                    if first:
-                        ref = 0
-                        first = False
-                        last_y = i
-                    if last_y < i:
-                        ref -= 1
-                        y.append(ref)
-                    elif last_y > i:
-                        ref += 1
-                        y.append(ref)
-                    else:
-                        y.append(ref)
+    for j in range(0, text_line.shape[1],1):
+        for i in range(0, text_line.shape[0]):
+            if text_line[i][j] == 0:
+                if first:
+                    ref = 0
+                    first = False
                     last_y = i
-                    ls = [last + 1]
-                    x.append(ls)
-                    last += 1
-                    break
-        slant, mse = contour_slant_mse(x, y)
-        max_freq, max_slope = local_maxima(x, y)
-        min_freq, min_slope = local_minima(x, y)
-        slant_list.append(slant)
-        mse_list.append(mse)
-        max_freq_list.append(max_freq)
-        max_slope_list.append(max_slope)
-        min_freq_list.append(min_freq)
-        min_slope_list.append(min_slope)
+                if last_y < i:
+                    ref -= 1
+                    y.append(ref)
+                elif last_y > i:
+                    ref += 1
+                    y.append(ref)
+                else:
+                    y.append(ref)
+                last_y = i
+                ls = [last + 1]
+                x.append(ls)
+                last += 1
+                break
+    if len(x) == 0:
+        return []
+    slant, mse = contour_slant_mse(x, y)
+    max_freq, max_slope = local_maxima(x, y)
+    min_freq, min_slope = local_minima(x, y)
+    slant_list.append(slant)
+    mse_list.append(mse)
+    max_freq_list.append(max_freq)
+    max_slope_list.append(max_slope)
+    min_freq_list.append(min_freq)
+    min_slope_list.append(min_slope)
 
     return [sum(slant_list) / len(slant_list), sum(mse_list) / len(mse_list), sum(max_freq_list) / len(max_slope_list), sum(max_slope_list) / len(max_slope_list), sum(min_freq_list) / len(min_freq_list), sum(min_slope_list) / len(min_slope_list)]
 
 
-def lower_contour_features(text_lines):
+def lower_contour_features(text_line):
     y = []
     x = []
     ref = -1
@@ -144,35 +145,36 @@ def lower_contour_features(text_lines):
     max_slope_list = []
     min_freq_list = []
     min_slope_list = []
-    for mat in text_lines:
-        for j in range(0, mat.shape[1]):
-            for i in range(mat.shape[0]-1, -1, -1):
-                if mat[i][j] == 0:
-                    if first:
-                        ref = i
-                        first = False
-                    if last_y < i:
-                        ref -= 1
-                        y.append(ref)
-                    elif last_y > i:
-                        ref += 1
-                        y.append(ref)
-                    else:
-                        y.append(ref)
-                    ls = [last+1]
-                    x.append(ls)
-                    last += 1
-                    last_y = i
-                    break
-        slant, mse = contour_slant_mse(x, y)
-        max_freq, max_slope = local_maxima(x, y)
-        min_freq, min_slope = local_minima(x, y)
-        slant_list.append(slant)
-        mse_list.append(mse)
-        max_freq_list.append(max_freq)
-        max_slope_list.append(max_slope)
-        min_freq_list.append(min_freq)
-        min_slope_list.append(min_slope)
+    for j in range(0, text_line.shape[1]):
+        for i in range(text_line.shape[0]-1, -1, -1):
+            if text_line[i][j] == 0:
+                if first:
+                    ref = i
+                    first = False
+                if last_y < i:
+                    ref -= 1
+                    y.append(ref)
+                elif last_y > i:
+                    ref += 1
+                    y.append(ref)
+                else:
+                    y.append(ref)
+                ls = [last+1]
+                x.append(ls)
+                last += 1
+                last_y = i
+                break
+    if len(x) == 0:
+        return []
+    slant, mse = contour_slant_mse(x, y)
+    max_freq, max_slope = local_maxima(x, y)
+    min_freq, min_slope = local_minima(x, y)
+    slant_list.append(slant)
+    mse_list.append(mse)
+    max_freq_list.append(max_freq)
+    max_slope_list.append(max_slope)
+    min_freq_list.append(min_freq)
+    min_slope_list.append(min_slope)
     return [sum(slant_list) / len(slant_list), sum(mse_list) / len(mse_list), sum(max_freq_list) / len(max_slope_list), sum(max_slope_list) / len(max_slope_list), sum(min_freq_list) / len(min_freq_list), sum(min_slope_list) / len(min_slope_list)]
 
 
