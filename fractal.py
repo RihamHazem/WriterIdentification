@@ -34,7 +34,7 @@ def diskdilation(txtln):
     y = []
     l, w = txtln.shape
     maxd = min(l // 4, w // 4)
-    for dmtr in range(1, maxd):
+    for dmtr in range(1, maxd,2):
         kernel = disk_kernel(dmtr // 2)
         dltline = morph.binary_dilation(txtln, selem=kernel)   # line after applying dilation
         a = np.count_nonzero(dltline == 1)  # area after dilation:# of ones
