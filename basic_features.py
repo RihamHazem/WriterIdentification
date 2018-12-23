@@ -14,18 +14,17 @@ def historgram(zaline):
 def getboundaries(zaline):
     # get the histogram
     hist = historgram(zaline)
+    m = math.floor(zaline.shape[0] * 0.3)
 
     bl = zaline.shape[0]  # bottom line
     tl = 0  # the top line
-    ul = 1
-    lb = 1
-
-    m = math.floor(zaline.shape[0] * 0.2)
-    h = sum(hist[m:m+5])
+    ul = m
+    lb = 2*m
+    h = sum(hist[m:(2*m)+1])
     err = sum((h - hist) ** 2)
 
-    for u in range(m+1, zaline.shape[0] - m - 5):
-        for l in range(u+4, zaline.shape[0] - m):
+    for u in range(m+1, zaline.shape[0] - 2*m):
+        for l in range(u+m, zaline.shape[0] - m):
             h = sum(hist[u:l+1])
             e = sum((h - hist) ** 2)
             if err >e:
