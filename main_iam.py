@@ -7,11 +7,10 @@ from sklearn.model_selection import train_test_split
 
 
 if __name__ == "__main__":
-    directory = "formsA-D/"
-    # file_name = "a02-053.png"
-    n_neighbors = 3
-    weights = 'uniform' # or distance
+    directory = "formsE-H/"
 
+    MultilayerPerceptron = MLPClassifier(alpha=0.001, activation='logistic', solver='adam', hidden_layer_sizes=(25,),
+                                         max_iter=500, random_state=0)
     writers = ["210", "211", "215"]
     page_features = []
     page_labels = []
@@ -28,6 +27,7 @@ if __name__ == "__main__":
 
         lines = split_lines(img)
         for line in lines:
+            img_print(line)
             nlabels, labels, stats, centroids = cv2.connectedComponentsWithStats(255 - line, connectivity=8,
                                                                                  ltype=cv2.CV_32S)
             stats = stats[1:]
@@ -38,27 +38,16 @@ if __name__ == "__main__":
                                                 box_width=label_stats[2], box_height=label_stats[3],
                                                 co_area=label_stats[4]))
             page_features.append(line_features(line) + basic_ftrs(line) + getfractalftrs(line) + enclosed_regions(line))
-            # cnt = len(page_features)
-            # print(cnt)
             page_labels.append(writer_id)
-        # print(page_features)
 
     page_features = np.array(page_features)
     labels = np.array(page_labels)
-    # print((labels == "014").sum(), (labels == "003").sum(), (labels == "007").sum())
 
     X_train, X_test, y_train, y_test = train_test_split(page_features, labels, test_size=0.33, random_state=42)
     #########################################
     #               Learning                #
     #########################################
-    # print(X)
-    # print(y)
-    # clf = neighbors.KNeighborsClassifier(n_neighbors, weights=weights)
-    # clf.fit(X_train, y_train)
-    # clf.predict(X_test)
-    # print(clf.score(X_test, y_test))
 
-    MultilayerPerceptron = MLPClassifier(alpha=0.001, activation='logistic', solver='adam', hidden_layer_sizes=(25,), max_iter=500, random_state=0)
     MultilayerPerceptron.fit(X_train, y_train)
     MultilayerPerceptron.predict(X_test)
     print(MultilayerPerceptron.score(X_test, y_test))

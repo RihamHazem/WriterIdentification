@@ -1,9 +1,10 @@
+import numpy as np
+from misc import load_binary_img
+from connected_components import removing_upper_lower, split_lines
+from threads import *
 import time
-from connected_components import *
-from fractal import *
-from basic_features import *
+from os import listdir
 from sklearn.neural_network import MLPClassifier
-from enclosed_regions import enclosed_regions
 
 
 if __name__ == "__main__":
@@ -18,7 +19,7 @@ if __name__ == "__main__":
         # begin counting the time of current test case
         page_features = []
         page_labels = []
-        t_begin = time.clock()
+        t_begin = time.time()
 
         for writer_id in listdir(directory + "/" + test_case):
             if "test.PNG" in writer_id:
@@ -30,7 +31,24 @@ if __name__ == "__main__":
                 img = removing_upper_lower(img)
                 lines = split_lines(img)
                 for line in lines:
-                    page_features.append(line_features(line) + basic_ftrs(line) + getfractalftrs(line) + enclosed_regions(line))
+                    # threading features
+                    thread_f1 = Thread_f1(line)
+                    thread_f2 = Thread_f2(line)
+                    thread_f3 = Thread_f3(line)
+                    thread_f4 = Thread_f4(line)
+
+                    thread_f1.start()
+                    thread_f2.start()
+                    thread_f3.start()
+                    thread_f4.start()
+
+                    thread_f1.join()
+                    thread_f2.join()
+                    thread_f3.join()
+                    thread_f4.join()
+
+                    page_features.append(thread_f1.features + thread_f2.features + thread_f3.features +
+                                         thread_f4.features)
                     page_labels.append(writer_id)
 
         page_features = np.array(page_features)
@@ -52,10 +70,26 @@ if __name__ == "__main__":
         img = removing_upper_lower(img)
         lines = split_lines(img)
         for line in lines:
-            page_feature.append(line_features(line) + basic_ftrs(line) + getfractalftrs(line) + enclosed_regions(line))
+            # threading features
+            thread_f1 = Thread_f1(line)
+            thread_f2 = Thread_f2(line)
+            thread_f3 = Thread_f3(line)
+            thread_f4 = Thread_f4(line)
+
+            thread_f1.start()
+            thread_f2.start()
+            thread_f3.start()
+            thread_f4.start()
+
+            thread_f1.join()
+            thread_f2.join()
+            thread_f3.join()
+            thread_f4.join()
+            page_feature.append(thread_f1.features + thread_f2.features + thread_f3.features +
+                                thread_f4.features)
 
         lst = MultilayerPerceptron.predict(page_feature)
-        t_end = time.clock()
+        t_end = time.time()
         # output the time of this test case
         time_file.write("{0:.2f}\n".format(t_end - t_begin))
         count_1 = 0
