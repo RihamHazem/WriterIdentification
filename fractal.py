@@ -88,10 +88,11 @@ def getslope(x, y):
     l_slope = []  # the final slopes of the desired line
     zal = []  # the desired line
     pts = [0, 0, 0, len(x)]  # start and end points for the three lines
-    minlen = math.floor(0.3 * len(x))
+    rng=math.floor(len(x)*0.15)
+    tholth=math.floor(len(x)*0.3)
 
-    for p1 in range(2, len(x)-2*minlen):
-     for p2 in range(p1+2, len(x)-minlen):
+    for p1 in range(max(tholth,(len(x)//3)-rng), min(len(x)-(2*tholth),(len(x)//3)+rng)):
+     for p2 in range(p1+tholth, len(x)-rng):
             pts[1] = p1
             pts[2] = p2
             lines, lines_err, slopes = fitline(x, y, pts)
@@ -99,7 +100,7 @@ def getslope(x, y):
                 l_slope = slopes
                 zal = lines
                 err=lines_err
-    # pltgraph(zal)
+    #pltgraph(zal)
     return l_slope
 
 
